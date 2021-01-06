@@ -1,5 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const cors = require('cors');
 
 const saltRounds = 10;
 const myPlaintextPassword = 'wumbo';
@@ -9,25 +10,25 @@ const app = express();
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
-
+app.use(cors());
 const database = {
 	streaks: [
-		{
-			time: '03:20:20',
-			streak: 1
-		},
-		{
-			time: '02:12:00',
-			streak: 2
-		},
-		{
-			time: '01:32:12',
-			streak: 3
-		},
-		{
-			time: '11:23:15',
-			streak: 0
-		}
+		[
+			'03:20:20',
+			1
+		],
+		[
+			'02:12:00',
+			2
+		],
+		[
+			'01:32:12',
+			3
+		],
+		[
+			'11:23:15',
+			0
+		]
 	]
 }
 
@@ -36,7 +37,7 @@ bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
 });
 
 app.get('/', (req,res) => {
-	res.send("this is working");
+	res.json(database.streaks);
 })
 
 app.post('/signin', (req,res) => {
