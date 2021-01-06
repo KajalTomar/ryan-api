@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const cors = require('cors');
 const knex = require('knex');
 
-const postgres = knex({
+const database = knex({
 	client: 'pg',
 	connection: {
 	  host : '127.0.0.1', // same as local host 
@@ -17,7 +17,7 @@ const saltRounds = 10;
 const myPlaintextPassword = 'wumbo';
 password = '';
 
-postgres.select('*').from('streakinfo').then(data => {
+database.select('*').from('streakinfo').then(data => {
 	console.log(data)
 });
 
@@ -26,7 +26,7 @@ const app = express();
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cors());
-const database = {
+const db = {
 	streaks: [
 		[
 			'03:20:20',
@@ -52,7 +52,7 @@ bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
 });
 
 app.get('/', (req,res) => {
-	res.json(database.streaks);
+	res.json(db.streaks);
 })
 
 app.post('/signin', (req,res) => {
