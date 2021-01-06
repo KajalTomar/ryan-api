@@ -1,10 +1,25 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
+const knex = require('knex');
+
+const postgres = knex({
+	client: 'pg',
+	connection: {
+	  host : '127.0.0.1', // same as local host 
+	  user : 'postgres',
+	  password : 'Shillai1!',
+	  database : 'data'
+	}
+  });
 
 const saltRounds = 10;
 const myPlaintextPassword = 'wumbo';
 password = '';
+
+postgres.select('*').from('streakinfo').then(data => {
+	console.log(data)
+});
 
 const app = express();
 
