@@ -26,47 +26,30 @@ const app = express();
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cors());
-const db = {
-	streaks: [
-		[
-			'03:20:20',
-			1
-		],
-		[
-			'02:12:00',
-			2
-		],
-		[
-			'01:32:12',
-			3
-		],
-		[
-			'11:23:15',
-			0
-		]
-	]
-}
+
 
 bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
 	password = hash;
 });
 
 app.get('/', (req,res) => {
-	res.json(db.streaks);
+	res.json('success');
 })
 
 app.post('/signin', (req,res) => {
 	
-	const givenPassword = "wumbo";
+	const isValid = bcrypt.compareSync(req.body.password, password);
 
-	bcrypt.compare(givenPassword, password, function(err, result) {
-		console.log(result);
-	});
-
-	
-	if(req.body.password === myPlaintextPassword)
+	if(isValid)
 	{
-		res.json('success');
+		database.select('*').from('streakinfo').then(streakinfo => {		
+			if(streakinfo.length){
+				res.json(streakinfo)
+			}
+			else{
+				res.status(400).json('Data not found')
+			}
+		})
 	} else{
 		res.status(400).json('You are not Ryan!');
 	}
@@ -75,7 +58,15 @@ app.post('/signin', (req,res) => {
 })
 
 app.post('/home', (req,res) => {
-	res.json(database.streaks);
+	database.select('*').from('streakinfo').then(streakinfo => {		
+		if(streakinfo.length){
+			res.json(streakinfo)
+		}
+		else{
+			res.status(400).json('Data not found')
+		}
+	})
+
 })
 
 app.listen(3000, () => {
