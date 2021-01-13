@@ -11,15 +11,11 @@ const database = knex({
 	  password : 'Shillai1!',
 	  database : 'data'
 	}
-  });
+});
 
 const saltRounds = 10;
 const myPlaintextPassword = 'wumbo';
 password = '';
-
-database.select('*').from('streakinfo').then(data => {
-	console.log(data)
-});
 
 const app = express();
 
@@ -30,31 +26,24 @@ app.use(cors());
 
 bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
 	password = hash;
-});
+}); 
+
 
 app.get('/', (req,res) => {
 	res.json('success');
 })
 
 app.post('/signin', (req,res) => {
-	
-	const isValid = bcrypt.compareSync(req.body.password, password);
 
-	if(isValid)
-	{
-		database.select('*').from('streakinfo').then(streakinfo => {		
-			if(streakinfo.length){
-				res.json(streakinfo)
-			}
-			else{
-				res.status(400).json('Data not found')
-			}
-		})
-	} else{
-		res.status(400).json('You are not Ryan!');
-	}
-	
-
+	bcrypt.compare(req.body.givenPassword, password, function(err, result) {
+		if(result == true){
+			database.select('*').from('streakinfo').then(streakinfo => {		
+				res.status(200).json('You are Ryan!');		
+			})
+		} else{
+			res.status(400).json('You are not Ryan!');
+		}
+	});
 })
 
 app.post('/home', (req,res) => {
@@ -74,10 +63,8 @@ app.listen(3000, () => {
 })
 
 
-/*
 
-/ --> res = this is working 
-/signin --> POST success/fail
-/home --> GET = data 
 
-*/
+// --> res = this is working 
+//signin --> POST success/fail
+//home --> GET = data 
