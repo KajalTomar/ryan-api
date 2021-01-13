@@ -55,7 +55,6 @@ app.post('/home', (req,res) => {
 			res.status(400).json('Data not found')
 		}
 	})
-
 })
 
 app.listen(3000, () => {
