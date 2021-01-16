@@ -8,13 +8,13 @@ const database = knex({
 	connection: {
 	  host : '127.0.0.1', // same as local host 
 	  user : 'postgres',
-	  password : 'Shillai1!',
+	  password : 'notRealPasswordOnGit',
 	  database : 'data'
 	}
 });
 
 const saltRounds = 10;
-const myPlaintextPassword = 'wumbo';
+const myPlaintextPassword = 'notRealPasswordOnGit';
 password = '';
 
 const app = express();
